@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_recipe_tag_tree" model="ir.ui.view">
+            <field name="name">rm.recipe.tag.tree</field>
+            <field name="model">rm.recipe.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Recipes tags" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="rm_recipe_tag_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">rm.recipe.tag</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+    </data>
+</odoo>

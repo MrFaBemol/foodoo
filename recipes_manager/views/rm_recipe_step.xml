@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_recipe_step_tree" model="ir.ui.view">
+            <field name="name">rm.recipe.step.tree</field>
+            <field name="model">rm.recipe.step</field>
+            <field name="arch" type="xml">
+                <tree string="Steps" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="step_nb" string=" "/>
+                    <field name="description" />
+                    <field name="time" />
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+rm_recipe_rule_access,rm_recipe_rule_access,model_rm_recipe,base.group_user,1,1,1,1
+rm_recipe_ingredient_rule_access,rm_recipe_ingredient_rule_access,model_rm_recipe_ingredient,base.group_user,1,1,1,1
+rm_recipe_step_rule_access,rm_recipe_step_rule_access,model_rm_recipe_step,base.group_user,1,1,1,1
+rm_recipe_tag_rule_access,rm_recipe_tag_rule_access,model_rm_recipe_tag,base.group_user,1,1,1,1

@@ -1,0 +1,83 @@
+/******* GENERAL ********/
+body {
+    color: #666666;
+}
+.o_main_navbar {
+    border-bottom: 1px solid #0A193D;
+    background-color: #1C294A;
+}
+
+
+/******* TREE ********/
+a {
+    /* PINK */
+    color: #eb2768;
+}
+
+
+/******* TREE ********/
+.o_list_view .o_list_table.o_list_table_grouped > tbody > tr.o_group_header.o_group_has_content {
+    color: #6c757d;
+}
+.o_list_view .o_list_table.o_list_table_grouped > tbody > tr.o_group_header {
+    background-color: #e9ecef;
+    box-shadow: inset 0 2px 0 #ffffff;
+}
+.o_list_view tbody > tr.o_group_header, .o_list_view tbody > tr.o_group_header:focus-within {
+    background-image: none;
+}
+
+
+/******* FORM ********/
+.o_form_view .o_form_sheet_bg {
+    border-bottom: 1px solid #ddd;
+    background: none;
+    background-color: #f9f9f9;
+}
+.o_form_view .o_horizontal_separator {
+    color: #0A193D;
+}
+
+
+/******* INPUTS ********/
+.o_input {
+    color: #1f1f1f;
+
+    border-radius: 0px;
+    border: 1px solid #ccc;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+}
+.o_required_modifier.o_input, .o_required_modifier .o_input{
+    background-color: #FFFFFF !important;
+    border-bottom: 2px solid #666666;
+}
+
+/******* CHECKBOX ********/
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #e9ecef;
+    border-color: #2b2f72;
+    background-color: #2b2f72;
+}
+
+
+/******* BUTTONS ********/
+.btn-primary {
+    color: #FFFFFF;
+    background-color: #2b2f72;
+    border-color: #2b2f72;
+}
+.btn-primary:hover {
+    color: #FFFFFF;
+    background-color: #1C294A;
+    border-color: #0A193D;
+}
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-primary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgb(38 174 172 / 50%);
+}
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
+    color: #FFFFFF;
+    background-color: #006d6b;
+    border-color: #00605e;
+}

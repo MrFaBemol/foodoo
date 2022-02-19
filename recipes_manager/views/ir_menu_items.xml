@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <menuitem name="Recipes Manager"
+                    id="recipes_manager_app_menu"
+                    web_icon="recipes_manager,static/description/icon.png" />
+
+        <!--    Recipes   -->
+        <menuitem parent="recipes_manager_app_menu"
+                  name="Recipes"
+                  id="recipes_menu"
+                  sequence="20" />
+
+        <menuitem parent="recipes_menu"
+                  name="Recipes List"
+                  id="recipes_recipes_menu"
+                  action="rm_recipe_action"
+                  sequence="10" />
+        <menuitem parent="recipes_menu"
+                  name="Tags"
+                  id="recipes_tag_menu"
+                  action="rm_recipe_tag_action"
+                  sequence="20" />
+
+
+        <!--    Products   -->
+        <menuitem parent="recipes_manager_app_menu"
+                  name="Products"
+                  id="products_menu"
+                  sequence="30" />
+
+        <menuitem parent="products_menu"
+                  name="Products"
+                  id="products_products_menu"
+                  action="purchase.product_normal_action_puchased"
+                  sequence="10" />
+        <menuitem parent="products_menu"
+                  name="Products variants"
+                  id="products_variants_menu"
+                  action="purchase.product_product_action"
+                  sequence="20" />
+
+
+
+    </data>
+</odoo>

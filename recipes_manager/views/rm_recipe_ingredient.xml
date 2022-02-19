@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_recipe_ingredient_tree" model="ir.ui.view">
+            <field name="name">rm.recipe.ingredient.tree</field>
+            <field name="model">rm.recipe.ingredient</field>
+            <field name="arch" type="xml">
+                <tree string="Ingredients" editable="bottom">
+                    <field name="product_id" />
+                    <field name="qty" />
+                    <field name="uom_qty" />
+                    <field name="product_uom" invisible="1"/>
+                    <field name="product_uom_category" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>
