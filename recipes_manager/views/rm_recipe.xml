@@ -9,6 +9,7 @@
                 <tree string="Recipes">
                     <field name="name" />
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="user_rating" widget="priority"/>
                 </tree>
             </field>
         </record>
@@ -22,12 +23,12 @@
                         <h1><field name="name" /></h1>
                         <group>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field name="ingredient_ids" />
+                            <field name="time_display" />
                         </group>
                         <notebook>
                             <page name="ingredients" string="Ingredients">
                                 <group>
-                                    <field name="step_ids" colspan="2" nolabel="1"/>
+                                    <field name="ingredient_ids" colspan="2" nolabel="1"/>
                                 </group>
                             </page>
                             <page name="steps" string="Steps">

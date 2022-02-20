@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class RecipeStep(models.Model):
@@ -14,12 +15,27 @@ class RecipeStep(models.Model):
     step_nb = fields.Char(compute="_compute_step_nb")
     recipe_id = fields.Many2one(comodel_name="rm.recipe", ondelete="cascade", required=True)
     description = fields.Text(required=True)
-    time = fields.Integer(string="Time (min)")
+    time = fields.Char(string="Time (min)")
+    time_min = fields.Integer(compute="_compute_step_times")
+    time_max = fields.Integer(compute="_compute_step_times")
 
     @api.depends('sequence')
     def _compute_step_nb(self):
         for rec in self:
             rec.step_nb = "#%s" % rec.sequence
+
+    @api.depends('time')
+    def _compute_step_times(self):
+        for rec in self:
+            if rec.time:
+                times = rec.time.split("-")
+                rec.time_min = int(times[0])
+                rec.time_max = int(times[1]) if len(times) > 1 else int(times[0])
+                if rec.time_min > rec.time_max:
+                    raise UserError(_("The min time is higher than the max time! (%s > %s)" % (rec.time_min, rec.time_max)))
+            else:
+                rec.time_min = 0
+                rec.time_max = 0
 
     _sql_constraints = [
         (

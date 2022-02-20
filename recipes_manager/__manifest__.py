@@ -21,6 +21,9 @@
         'security/security.xml',
 
         'views/res_company.xml',
+        'views/product_category.xml',
+        'views/product_template.xml',
+
         'views/rm_recipe.xml',
         'views/rm_recipe_ingredient.xml',
         'views/rm_recipe_tag.xml',

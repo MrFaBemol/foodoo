@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="product_category_list_view" model="ir.ui.view">
+            <field name="name">product_category_list_view</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="default_category" invisible="1" />
+                    <field name="is_eatable" />
+                </xpath>
+
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-success">default_category == True</attribute>
+                    <attribute name="decoration-bf">default_category == True</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_category_form_view" model="ir.ui.view">
+            <field name="name">product_category_form_view</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="default_category" />
+                    <field name="is_eatable" />
+                </xpath>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

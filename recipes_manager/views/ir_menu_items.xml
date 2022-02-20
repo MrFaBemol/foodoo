@@ -40,6 +40,11 @@
                   id="products_variants_menu"
                   action="purchase.product_product_action"
                   sequence="20" />
+        <menuitem parent="products_menu"
+                  name="Products categories"
+                  id="products_categories_menu"
+                  action="product.product_category_action_form"
+                  sequence="30" />
 
 
 

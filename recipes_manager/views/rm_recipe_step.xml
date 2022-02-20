@@ -11,6 +11,8 @@
                     <field name="step_nb" string=" "/>
                     <field name="description" />
                     <field name="time" />
+                    <field name="time_min" invisible="1" />
+                    <field name="time_max" invisible="1" />
                 </tree>
             </field>
         </record>
