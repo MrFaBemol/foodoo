@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_schedule_day_tree" model="ir.ui.view">
+            <field name="name">rm.schedule.day.tree</field>
+            <field name="model">rm.schedule.day</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="note" />
+                    <field name="breakfast_recipe" />
+                    <field name="lunch_recipe" />
+                    <field name="dinner_recipe" />
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

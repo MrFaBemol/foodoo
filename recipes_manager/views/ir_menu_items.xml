@@ -6,6 +6,24 @@
                     id="recipes_manager_app_menu"
                     web_icon="recipes_manager,static/description/icon.png" />
 
+        <!--    Schedules   -->
+        <menuitem parent="recipes_manager_app_menu"
+                  name="Schedules"
+                  id="schedules_menu"
+                  sequence="10" />
+
+        <menuitem parent="schedules_menu"
+                  name="Schedules"
+                  id="schedules_schedules_menu"
+                  action="rm_schedule_action"
+                  sequence="10" />
+        <menuitem parent="schedules_menu"
+                  name="Schedule templates"
+                  id="schedules_templates_menu"
+                  action="rm_schedule_template_action"
+                  sequence="20" />
+
+
         <!--    Recipes   -->
         <menuitem parent="recipes_manager_app_menu"
                   name="Recipes"

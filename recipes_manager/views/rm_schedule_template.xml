@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_schedule_template_tree" model="ir.ui.view">
+            <field name="name">rm.schedule.template.tree</field>
+            <field name="model">rm.schedule.template</field>
+            <field name="arch" type="xml">
+                <tree string="Templates">
+                    <field name="name" />
+                    <field name="day_qty" />
+                    <field name="meal_qty" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="rm_schedule_template_form" model="ir.ui.view">
+            <field name="name">rm.schedule.template.form</field>
+            <field name="model">rm.schedule.template</field>
+            <field name="arch" type="xml">
+                <form string="Template form">
+                    <sheet>
+                        <h1><field name="name" /></h1>
+                        <group string="Default Recipes">
+                            <field name="breakfast_default_recipe" />
+                            <field name="lunch_default_recipe" />
+                            <field name="dinner_default_recipe" />
+                        </group>
+                        <group string="Days">
+                            <group><field name="day_qty" /></group>
+                            <group><field name="meal_qty" /></group>
+                            <separator/>
+
+                            <field name="day_ids" nolabel="1" colspan="2" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="rm_schedule_template_action" model="ir.actions.act_window">
+            <field name="name">Schedule templates</field>
+            <field name="res_model">rm.schedule.template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

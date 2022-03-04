@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_schedule_form" model="ir.ui.view">
+            <field name="name">rm.schedule.form</field>
+            <field name="model">rm.schedule</field>
+            <field name="arch" type="xml">
+                <form string="Schedule">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_generate_schedule" string="Generate schedule" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <label for="date_from" string="Date"/>
+                            <div class="o_row">
+                                <field name="date_from" widget="daterange" options="{'related_end_date': 'date_to'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <i class="fa fa-long-arrow-right mx-1" aria-label="Arrow icon" title="Arrow"/>
+                                <field name="date_to" widget="daterange" options="{'related_start_date': 'date_from'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </div>
+
+                            <field name="template_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+
+
+                        </group>
+                        <group attrs="{'invisible': [('has_correct_date_range', '=', True)] }">
+                            <field name="has_correct_date_range" invisible="1"/>
+                            <div style="color:orange" colspan="2">
+                                <span class="icon">
+                                    <i class="fa fa-exclamation-triangle" title="Warning" />
+                                </span>
+                                The date range is incorrect and does not match the number of days defined in template
+                            </div>
+                        </group>
+
+                        <group>
+                            <field name="min_serving_per_recipe" attrs="{'readonly': [('state', 'not in', ['draft', 'confirmed'])]}"/>
+                        </group>
+
+
+                        <group string="Days">
+                            <field name="template_day_ids" nolabel="1" colspan="2" force_save="1"
+                                   attrs="{
+                                        'readonly': ['|', ('state', '!=', 'draft'), ('template_id', '!=', False)],
+                                        'invisible': [('state', 'not in', ['draft'])],
+                                    }" />
+                            <field name="day_ids" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rm_schedule_tree" model="ir.ui.view">
+            <field name="name">rm.schedule.tree</field>
+            <field name="model">rm.schedule</field>
+            <field name="arch" type="xml">
+                <tree string="Schedules" default_order="date_from desc" decoration-warning="has_correct_date_range == False">
+                    <field name="has_correct_date_range" invisible="1" />
+
+                    <field name="date_from" widget="daterange" options="{'related_end_date': 'date_to'}" />
+                    <field name="date_to" widget="daterange" options="{'related_start_date': 'date_from'}" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="rm_schedule_action" model="ir.actions.act_window">
+            <field name="name">Schedules</field>
+            <field name="res_model">rm.schedule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

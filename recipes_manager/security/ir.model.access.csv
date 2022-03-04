@@ -3,3 +3,11 @@ rm_recipe_rule_access,rm_recipe_rule_access,model_rm_recipe,base.group_user,1,1,
 rm_recipe_ingredient_rule_access,rm_recipe_ingredient_rule_access,model_rm_recipe_ingredient,base.group_user,1,1,1,1
 rm_recipe_step_rule_access,rm_recipe_step_rule_access,model_rm_recipe_step,base.group_user,1,1,1,1
 rm_recipe_tag_rule_access,rm_recipe_tag_rule_access,model_rm_recipe_tag,base.group_user,1,1,1,1
+
+rm_schedule_rule_access,rm_schedule_rule_access,model_rm_schedule,base.group_user,1,1,1,1
+rm_schedule_day_rule_access,rm_schedule_day_rule_access,model_rm_schedule_day,base.group_user,1,1,1,1
+rm_schedule_template_rule_access,rm_schedule_template_rule_access,model_rm_schedule_template,base.group_user,1,1,1,1
+rm_schedule_template_day_rule_access,rm_schedule_template_day_rule_access,model_rm_schedule_template_day,base.group_user,1,1,1,1
+
+product_brand_rule_access,product_brand_rule_access,model_product_brand,base.group_user,1,1,1,1
+

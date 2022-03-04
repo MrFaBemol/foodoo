@@ -22,8 +22,14 @@
                     <sheet>
                         <h1><field name="name" /></h1>
                         <group>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field name="time_display" />
+                            <group>
+                                <field name="meal_type" />
+                                <field name="serving_qty" />
+                            </group>
+                            <group>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="time_display" />
+                            </group>
                         </group>
                         <notebook>
                             <page name="ingredients" string="Ingredients">

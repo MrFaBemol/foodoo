@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="recipe_tag_rapido" model="rm.recipe.tag">
+            <field name="name">Rapido</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="recipe_tag_express" model="rm.recipe.tag">
+            <field name="name">Express</field>
+            <field name="color">9</field>
+        </record>
+
+        <record id="recipe_tag_veggie" model="rm.recipe.tag">
+            <field name="name">Veggie</field>
+            <field name="color">10</field>
+        </record>
+
+    </data>
+</odoo>

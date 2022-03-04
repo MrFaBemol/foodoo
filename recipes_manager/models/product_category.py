@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-
+from odoo.exceptions import UserError
 
 
 class ProductCategory(models.Model):
