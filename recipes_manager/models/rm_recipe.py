@@ -39,11 +39,12 @@ class Recipe(models.Model):
 
 
 
-    @api.depends('step_ids')
+    @api.depends('step_ids', 'tag_ids')
     def _compute_time_display(self):
         for recipe in self:
-            time_min = sum(recipe.step_ids.mapped('time_min'))
-            time_max = sum(recipe.step_ids.mapped('time_max'))
+            is_hellofresh_recipe = self.env.ref('recipes_manager.recipe_tag_hellofresh') in recipe.tag_ids
+            time_min = int(sum(recipe.step_ids.mapped('time_min')) * (1.2 if is_hellofresh_recipe else 1))
+            time_max = int(sum(recipe.step_ids.mapped('time_max')) * (1.2 if is_hellofresh_recipe else 1))
 
             mod_min, mod_max = time_min % 5, time_max % 5
             if mod_min < 3:
@@ -75,6 +76,10 @@ class Recipe(models.Model):
                     tags.append(self.env.ref('recipes_manager.recipe_tag_express').id)
                 elif recipe.time_max <= 25:
                     tags.append(self.env.ref('recipes_manager.recipe_tag_rapido').id)
+
+            # HelloFresh
+            if recipe.step_ids.filtered_domain([('description', 'ilike', "HelloFresh")]):
+                tags.append(self.env.ref('recipes_manager.recipe_tag_hellofresh').id)
 
             if tags:
                 recipe.with_context(add_tags=True).write({'tag_ids': [(4, tag) for tag in tags]})

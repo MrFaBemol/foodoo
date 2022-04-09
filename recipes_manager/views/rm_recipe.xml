@@ -48,6 +48,19 @@
             </field>
         </record>
 
+        <record id="rm_recipe_search" model="ir.ui.view">
+            <field name="name">rm.recipe.search</field>
+            <field name="model">rm.recipe</field>
+            <field name="arch" type="xml">
+                <search string="Recipe search">
+                    <field name="name" />
+                    <filter string="Breakfast recipes" name="breakfast_domain" domain="[('meal_type', '=', 'breakfast')]" />
+                    <filter string="Lunch recipes" name="lunch_domain" domain="[('meal_type', '=', 'lunch')]" />
+                    <filter string="Dinner recipes" name="dinner_domain" domain="[('meal_type', '=', 'dinner')]" />
+                </search>
+            </field>
+        </record>
+
         <record id="rm_recipe_action" model="ir.actions.act_window">
             <field name="name">Recipes</field>
             <field name="res_model">rm.recipe</field>

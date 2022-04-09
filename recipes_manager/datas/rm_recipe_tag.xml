@@ -2,6 +2,11 @@
 <odoo>
     <data>
 
+        <record id="recipe_tag_hellofresh" model="rm.recipe.tag">
+            <field name="name">HelloFresh</field>
+            <field name="color">4</field>
+        </record>
+
         <record id="recipe_tag_rapido" model="rm.recipe.tag">
             <field name="name">Rapido</field>
             <field name="color">3</field>
