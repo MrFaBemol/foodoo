@@ -11,7 +11,7 @@ class RecipeStep(models.Model):
     def _get_default_sequence(self):
         return len(self.recipe_id.step_ids) + 1
 
-    sequence = fields.Integer(default=_get_default_sequence)
+    sequence = fields.Integer(default=_get_default_sequence, copy=True)
     step_nb = fields.Char(compute="_compute_step_nb")
     recipe_id = fields.Many2one(comodel_name="rm.recipe", ondelete="cascade", required=True)
     description = fields.Text(required=True)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class Recipe(models.Model):
@@ -36,15 +36,25 @@ class Recipe(models.Model):
         default='0',
         index=True,
     )
+    difficulty = fields.Selection([
+        ('0', 'No rating'),
+        ('1', 'Easy'),
+        ('2', 'Medium'),
+        ('3', 'Hard')
+    ],
+        string='Difficulty',
+        default='0',
+        index=True,
+    )
 
 
 
     @api.depends('step_ids', 'tag_ids')
     def _compute_time_display(self):
         for recipe in self:
-            is_hellofresh_recipe = self.env.ref('recipes_manager.recipe_tag_hellofresh') in recipe.tag_ids
-            time_min = int(sum(recipe.step_ids.mapped('time_min')) * (1.2 if is_hellofresh_recipe else 1))
-            time_max = int(sum(recipe.step_ids.mapped('time_max')) * (1.2 if is_hellofresh_recipe else 1))
+            ratio = 1.2 if self.env.ref('recipes_manager.recipe_tag_hellofresh') in recipe.tag_ids else 1
+            time_min = int(sum(recipe.step_ids.mapped('time_min')) * ratio)
+            time_max = int(sum(recipe.step_ids.mapped('time_max')) * ratio)
 
             mod_min, mod_max = time_min % 5, time_max % 5
             if mod_min < 3:
@@ -96,3 +106,10 @@ class Recipe(models.Model):
         res.add_automatic_tags()
         return res
 
+    def copy(self, default=None):
+        res = super(Recipe, self).copy(default)
+        res.write({
+            'ingredient_ids': [ingredient.copy().id for ingredient in self.ingredient_ids],
+            'step_ids': [step.copy().id for step in self.step_ids],
+        })
+        return res

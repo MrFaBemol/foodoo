@@ -9,7 +9,7 @@
                 <form string="Schedule">
                     <header>
                         <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="action_generate_schedule" string="Generate schedule" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                        <button name="action_generate_schedule" string="Generate schedule" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

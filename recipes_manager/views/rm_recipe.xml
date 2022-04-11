@@ -6,10 +6,13 @@
             <field name="name">rm.recipe.tree</field>
             <field name="model">rm.recipe</field>
             <field name="arch" type="xml">
-                <tree string="Recipes">
-                    <field name="name" />
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <tree string="Recipes" default_order="user_rating,name">
                     <field name="user_rating" widget="priority"/>
+                    <field name="name" />
+                    <field name="meal_type" />
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="time_display" />
+                    <field name="difficulty" widget="priority"/>
                 </tree>
             </field>
         </record>

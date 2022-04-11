@@ -20,8 +20,9 @@ class RmSchedule(models.Model):
     state = fields.Selection(
         selection=[
             ('draft', 'Draft'),
-            ('confirmed', 'Confirmed'),
+            ('pending', 'Pending'),
             ('generated', 'Generated'),
+            ('validated', 'Validated'),
             ('done', 'Done'),
         ],
         required=True,
@@ -48,8 +49,7 @@ class RmSchedule(models.Model):
     def _onchange_template_id(self):
         # Todo: Add a confirmation dialog
         if self.template_id:
-            ids = [day.copy(default={'template_id': False}).id for day in self.template_id.day_ids]
-            self.template_day_ids = ids
+            self.template_day_ids = [day.copy(default={'template_id': False}).id for day in self.template_id.day_ids]
 
 
     def get_meal_qty_needed(self):
@@ -147,7 +147,7 @@ class RmSchedule(models.Model):
 
     def action_confirm(self):
         self.ensure_one()
-        self.state = 'confirmed'
+        self.state = 'pending'
         self.generate_days()
 
     def action_generate_schedule(self):
