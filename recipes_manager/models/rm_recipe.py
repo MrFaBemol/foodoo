@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from random import randint
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class Recipe(models.Model):
     _name = "rm.recipe"
     _description = "A recipe with ingredients and steps"
+
+    def name_get(self):
+        limit = 50
+        return [(s.id, s.name if len(s.name) < limit else s.name[:limit-3] + " [...]") for s in self]
 
     name = fields.Char(required=True)
 
@@ -15,6 +21,11 @@ class Recipe(models.Model):
     time_display = fields.Char(compute="_compute_time_display", string="Duration")
     time_min = fields.Integer(compute="_compute_time_display")
     time_max = fields.Integer(compute="_compute_time_display")
+
+    used_schedule_ids = fields.Many2many(comodel_name="rm.schedule", compute="_compute_used_schedule_ids", compute_sudo=True)
+    last_used = fields.Date(compute="_compute_used_schedule_ids", store=True)
+    weight_rating = fields.Integer(compute="_compute_weight_rating")
+
 
     meal_type = fields.Selection(
         selection=[
@@ -49,6 +60,7 @@ class Recipe(models.Model):
 
 
 
+
     @api.depends('step_ids', 'tag_ids')
     def _compute_time_display(self):
         for recipe in self:
@@ -67,6 +79,40 @@ class Recipe(models.Model):
             recipe.time_display = "%s min" % (time_min if time_min == time_max else ("%s-%s" % (time_min, time_max)))
             recipe.time_min = time_min
             recipe.time_max = time_max
+
+    def _compute_used_schedule_ids(self):
+        for recipe in self:
+            recipe.used_schedule_ids = self.env['rm.schedule.day'].search([
+                ('schedule_id.state', 'in', ['validated', 'done']),
+                '|', '|',
+                    ('breakfast_recipe', '=', recipe.id),
+                    ('lunch_recipe', '=', recipe.id),
+                    ('dinner_recipe', '=', recipe.id)
+            ]).schedule_id
+            recipe.last_used = recipe.used_schedule_ids.sorted(key='date_to', reverse=True)[:1].date_to
+
+    @api.depends('last_used', 'user_rating', 'difficulty')
+    def _compute_weight_rating(self):
+        # Todo: add a tag weight
+        for recipe in self:
+            weight_rating = 5
+            weight_rating += 2 * int(recipe.user_rating)
+            weight_rating -= 1 * int(recipe.difficulty)
+            weight_rating += (fields.Date.today() - recipe.last_used).days // 7 if recipe.last_used else 15
+            recipe.weight_rating = max(weight_rating, 1)
+
+
+    def pick_one(self):
+        if not self:
+            raise UserError(_("You can't pick one recipe of there is none !"))
+        self._compute_weight_rating()
+        pick = randint(1, sum(self.mapped('weight_rating')))
+        step = 0
+        for recipe in self.sorted(lambda r: (r.weight_rating, r.id)):
+            if pick <= recipe.weight_rating + step:
+                return recipe
+            step += recipe.weight_rating
+
 
     def clean_step_numbers(self):
         for recipe in self:

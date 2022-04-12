@@ -10,6 +10,11 @@
                     <header>
                         <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         <button name="action_generate_schedule" string="Generate schedule" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+
+                        <button name="action_validate" string="Validate schedule" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'generated')]}"/>
+                        <button name="action_generate_schedule" string="Generate schedule" type="object" class="oe_button" attrs="{'invisible': [('state', '!=', 'generated')]}"/>
+
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -62,7 +67,7 @@
 
                     <field name="date_from" widget="daterange" options="{'related_end_date': 'date_to'}" />
                     <field name="date_to" widget="daterange" options="{'related_start_date': 'date_from'}" />
-                    <field name="state" />
+                    <field name="state" widget="badge" />
                 </tree>
             </field>
         </record>

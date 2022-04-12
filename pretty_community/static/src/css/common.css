@@ -4,14 +4,16 @@ body {
 }
 .o_main_navbar {
     border-bottom: 1px solid #0A193D;
-    background-color: #1C294A;
+    /*background-color: #1C294A;*/
+    background-color: rgb(113, 75, 103);
 }
 
 
-/******* TREE ********/
+/******* LINKS ********/
 a {
     /* PINK */
-    color: #eb2768;
+    /*color: #eb2768;*/
+    color: #017075;
 }
 
 

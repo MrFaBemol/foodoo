@@ -13,6 +13,8 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="time_display" />
                     <field name="difficulty" widget="priority"/>
+                    <field name="last_used" optional="hide" />
+                    <field name="weight_rating" optional="hide" />
                 </tree>
             </field>
         </record>
@@ -27,16 +29,18 @@
                         <group>
                             <group>
                                 <field name="meal_type" />
-                                <field name="serving_qty" />
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                             <group>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 <field name="time_display" />
+                                <field name="last_used" />
                             </group>
                         </group>
                         <notebook>
                             <page name="ingredients" string="Ingredients">
                                 <group>
+                                    <field name="serving_qty" />
+                                    <separator />
                                     <field name="ingredient_ids" colspan="2" nolabel="1"/>
                                 </group>
                             </page>
