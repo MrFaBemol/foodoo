@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from collections import defaultdict
 
+from odoo.exceptions import UserError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ class RmSchedule(models.Model):
     _name = "rm.schedule"
     _description = "A schedule for recipes"
 
+    purchase_id = fields.Many2one(comodel_name="purchase.order")
     date_from = fields.Date(required=True)
     date_to = fields.Date(required=True)
     has_correct_date_range = fields.Boolean(compute="_compute_has_correct_date_range")
@@ -29,13 +31,28 @@ class RmSchedule(models.Model):
         required=True,
         default='draft',
     )
+    error_message = fields.Html(compute="_compute_error_message")
 
     template_id = fields.Many2one(comodel_name="rm.schedule.template")
     template_day_ids = fields.One2many(comodel_name="rm.schedule.template.day", inverse_name="schedule_id")
     day_ids = fields.One2many(comodel_name="rm.schedule.day", inverse_name="schedule_id")
 
     min_serving_per_recipe = fields.Integer(required=True, default=2, string="Min. servings")
+    ingredient_ids = fields.One2many(comodel_name="rm.schedule.ingredient", inverse_name="schedule_id")
+    ingredient_line_ids = fields.One2many(related="ingredient_ids.line_ids")
 
+
+    @api.depends('ingredient_ids.uom_count')
+    def _compute_error_message(self):
+        for schedule in self:
+            error_message = ""
+
+            incorrect_ingredients = self.ingredient_ids.filtered(lambda i: i.add_to_cart and i.uom_count > 1)
+            if incorrect_ingredients:
+                error_message += "<b><i class='fa fa-warning' /> Some ingredients have multiple UOM:</b> <ul>%s</ul>" \
+                                 % ''.join(["<li>%s: %s</li>" % (ingredient.product_id.name, ingredient.uom_count) for ingredient in incorrect_ingredients])
+
+            schedule.error_message = error_message
 
     @api.depends('day_ids')
     def _compute_used_recipe_ids(self):
@@ -58,6 +75,10 @@ class RmSchedule(models.Model):
             self.template_day_ids = [day.copy(default={'template_id': False}).id for day in self.template_id.day_ids]
 
 
+    """
+        Schedule generation methods
+    """
+
     def get_meal_qty_needed(self):
         self.ensure_one()
         meal_sequence = []
@@ -68,7 +89,6 @@ class RmSchedule(models.Model):
                     meal_qty_needed[meal] += 1
                     meal_sequence.append(meal)
         return meal_sequence, meal_qty_needed
-
 
     def cut_meal_sequence(self, sequence, longest_step=0, offset=0):
         if not longest_step:
@@ -164,6 +184,82 @@ class RmSchedule(models.Model):
                         day.write({'%s_recipe' % meal: recipe.id})
 
 
+    """
+        Cart generator
+    """
+    def generate_ingredients_list(self):
+        self.ensure_one()
+        self.ingredient_ids.exists().unlink()
+        qty_by_recipe = defaultdict(int)
+        for day in self.day_ids:
+            for meal in MEAL_TYPES:
+                qty_by_recipe[day.meal(meal, "recipe")] += 1
+
+        if self.env['rm.recipe'] in qty_by_recipe:
+            qty_by_recipe.pop(self.env['rm.recipe'])
+
+        ingredients_by_recipe = {recipe: recipe.generate_ingredients_list(qty) for recipe, qty in qty_by_recipe.items()}
+
+        for recipe, ingredients in ingredients_by_recipe.items():
+            for ingredient in ingredients:
+                ingredient_id = self.ingredient_ids.filtered(lambda i: i.product_id == ingredient['product_id'])
+                if not ingredient_id:
+                    ingredient_id = self.env['rm.schedule.ingredient'].create({'schedule_id': self.id, 'product_id': ingredient['product_id'].id})
+
+                self.env['rm.schedule.ingredient.line'].create({
+                    'ingredient_id': ingredient_id.id,
+                    'recipe_id': recipe.id,
+                    'qty': ingredient['qty'],
+                    'uom_qty': ingredient['uom_qty'].id,
+                    'note': ingredient['note'],
+                })
+
+
+    def get_products_by_category(self, add_to_cart=True):
+        self.ensure_one()
+        ingredients_by_category = defaultdict(lambda: self.env['rm.schedule.ingredient'])
+        for ingredient in self.ingredient_ids.filtered('add_to_cart' if add_to_cart else None):
+            ingredients_by_category[ingredient.product_category_id] |= ingredient
+        for cat, ingredients in ingredients_by_category.items():
+            ingredients_by_category[cat] = ingredients.sorted(key=lambda i: i.product_id.name)
+        return ingredients_by_category
+
+
+    def action_generate_purchase_order(self):
+        self.ensure_one()
+        if self.purchase_id:
+            raise UserError(_("There is already an order for this schedule! (%s)" % self.purchase_id.name))
+
+        self.purchase_id = self.env['purchase.order'].create({
+            'schedule_id': self.id,
+            'partner_id': 1,
+        })
+
+        # Create all the lines in the right categories
+        lines_vals = []
+        for cat, ingredients in self.get_products_by_category().items():
+            # Category section
+            lines_vals.append({'order_id': self.purchase_id.id, 'display_type': 'line_section', 'name': cat.name, 'product_qty': 0})
+
+            for ingredient in ingredients:
+                description = ingredient.product_id.name
+                notes = ingredient.line_ids.filtered('note').mapped('note')
+                if notes:
+                    description += "\n%s" % "\n".join(["- %s" % note for note in notes])
+                lines_vals.append({
+                    'order_id': self.purchase_id.id,
+                    'schedule_ingredient_id': ingredient.id,
+                    'product_id': ingredient.product_id.id,
+                    'product_qty': ingredient.total_qty,
+                    'product_uom': ingredient.uom_qty.id,
+                    'name': description,
+                })
+
+        # print("=====================================================")
+        # print(lines_vals)
+        # print("=====================================================")
+        # raise UserError("stop")
+        self.env['purchase.order.line'].create(lines_vals)
 
 
 
@@ -191,7 +287,6 @@ class RmSchedule(models.Model):
             self.generate_days()
         else:
             self.state = 'generated'
-            pass
 
         try_amount = 1
         while try_amount <= 3:
@@ -206,4 +301,5 @@ class RmSchedule(models.Model):
         self.ensure_one()
         self.state = 'validated'
         self.used_recipe_ids._compute_used_schedule_ids()
+        self.generate_ingredients_list()
 

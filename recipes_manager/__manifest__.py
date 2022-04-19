@@ -36,6 +36,8 @@
         'views/rm_schedule_day.xml',
         'views/rm_schedule_template.xml',
         'views/rm_schedule_template_day.xml',
+        'views/rm_schedule_ingredient.xml',
+        'views/rm_schedule_ingredient_line.xml',
 
         'views/ir_menu_items.xml',
     ],

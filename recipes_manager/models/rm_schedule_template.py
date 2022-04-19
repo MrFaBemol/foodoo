@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 class RmScheduleTemplate(models.Model):
     _name = "rm.schedule.template"
     _description = "A schedule template"
+    _inherit = ["meal.mixin"]
 
     name = fields.Char(required=True)
 

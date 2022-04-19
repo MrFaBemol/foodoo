@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_schedule_ingredient_tree" model="ir.ui.view">
+            <field name="name">rm.schedule.ingredient.tree</field>
+            <field name="model">rm.schedule.ingredient</field>
+            <field name="arch" type="xml">
+                <tree default_order="add_to_cart desc,product_id" limit="20" decoration-danger="add_to_cart and uom_count != 1" decoration-muted="not add_to_cart">
+                    <field name="add_to_cart" invisible="1" />
+                    <field name="product_id" />
+                    <field name="product_category_id" optional="hide" />
+                    <field name="line_count" string="Recipes" attrs="{'invisible': [('line_count', '&lt;=', 1)]}" />
+                    <field name="total_qty" />
+                    <field name="uom_qty" attrs="{'invisible': [('uom_count', '!=', 1)]}" />
+                    <field name="uom_problem" optional="hide" attrs="{'invisible': [('add_to_cart', '!=', True)]}" />
+                    <field name="uom_count" invisible="1" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="rm_schedule_ingredient_form" model="ir.ui.view">
+            <field name="name">rm.schedule.ingredient.form</field>
+            <field name="model">rm.schedule.ingredient</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <h1><field name="product_id" /></h1>
+                        <group>
+                            <field name="product_category_id" />
+                            <field name="add_to_cart" />
+                        </group>
+                        <group string="Used in">
+                            <field name="line_ids" nolabel="1" colspan="2" force_save="1" readonly="1"/>
+                        </group>
+                        <div class="oe_row">
+                            <label for="total_qty" />:
+                            <field name="total_qty" />
+                            <field name="uom_count" attrs="{'invisible': [('uom_count', '!=', 1)]}" />
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

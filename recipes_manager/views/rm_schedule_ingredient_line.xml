@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rm_schedule_ingredient_line_tree" model="ir.ui.view">
+            <field name="name">rm.schedule.ingredient.line.tree</field>
+            <field name="model">rm.schedule.ingredient.line</field>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false">
+                    <field name="recipe_id" />
+                    <field name="qty" />
+                    <field name="uom_qty" />
+                    <field name="note" />
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

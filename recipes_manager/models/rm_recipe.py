@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from random import randint
+from random import randint, randrange
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -102,7 +102,31 @@ class Recipe(models.Model):
             recipe.weight_rating = max(weight_rating, 1)
 
 
+    def generate_ingredients_list(self, serving_qty):
+        """
+            Generate ingredients qty for passed servings quantity
+            Also pick one ingredient if there are several
+        :return: list[] of dict{}
+        """
+        self.ensure_one()
+        ingredients_list = []
+        for ingredient in self.ingredient_ids:
+            i = randrange(len(ingredient.product_ids))
+            product = ingredient.product_ids[i:i+1]
+            ingredients_list.append({
+                'product_id': product,
+                'qty': round(ingredient.qty * (serving_qty / self.serving_qty), 2),
+                'uom_qty': ingredient.uom_qty,
+                'note': ingredient.note,
+            })
+        return ingredients_list
+
+
     def pick_one(self):
+        """
+        Pick a recipe among self based on priority (weight_rating)
+        :return: rm.recipe() record
+        """
         if not self:
             raise UserError(_("You can't pick one recipe of there is none !"))
         self._compute_weight_rating()

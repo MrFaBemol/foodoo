@@ -14,9 +14,14 @@
                         <button name="action_validate" string="Validate schedule" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'generated')]}"/>
                         <button name="action_generate_schedule" string="Generate schedule" type="object" class="oe_button" attrs="{'invisible': [('state', '!=', 'generated')]}"/>
 
+                        <button name="action_generate_purchase_order" string="Generate purchase order" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'validated'), ('purchase_id', '!=', False)]}"/>
+                        <button name="generate_ingredients_list" string="Refresh ingredients list" type="object" class="oe_button" attrs="{'invisible': [('state', '!=', 'validated')]}"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>
+                    <div class="alert alert-warning" role="alert" attrs="{'invisible': [('error_message', '=', '')]}" >
+                        <field name="error_message" />
+                    </div>
                     <sheet>
                         <group>
                             <label for="date_from" string="Date"/>
@@ -41,18 +46,29 @@
                         </group>
 
                         <group>
-                            <field name="min_serving_per_recipe" attrs="{'readonly': [('state', 'not in', ['draft', 'confirmed'])]}"/>
+                            <group><field name="min_serving_per_recipe" attrs="{'readonly': [('state', 'not in', ['draft', 'pending'])]}"/></group>
+                            <group><field name="purchase_id" attrs="{'invisible': [('purchase_id', '=', False)]}" /></group>
                         </group>
 
 
-                        <group string="Days">
-                            <field name="template_day_ids" nolabel="1" colspan="2" force_save="1"
-                                   attrs="{
-                                        'readonly': ['|', ('state', '!=', 'draft'), ('template_id', '!=', False)],
-                                        'invisible': [('state', 'not in', ['draft'])],
-                                    }" />
-                            <field name="day_ids" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
-                        </group>
+                        <notebook>
+                            <page string="Days" name="page_days">
+                                <group>
+                                    <field name="template_day_ids" nolabel="1" colspan="2" force_save="1"
+                                           attrs="{
+                                                'readonly': ['|', ('state', '!=', 'draft'), ('template_id', '!=', False)],
+                                                'invisible': [('state', 'not in', ['draft'])],
+                                            }" />
+                                    <field name="day_ids" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('state', 'in', ['draft'])]}"/>
+                                </group>
+                            </page>
+                            <page string="Ingredients" name="page_ingredients">
+                                <group>
+                                    <field name="ingredient_ids" nolabel="1" colspan="2" force_save="1" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+
                     </sheet>
                 </form>
             </field>
@@ -67,7 +83,11 @@
 
                     <field name="date_from" widget="daterange" options="{'related_end_date': 'date_to'}" />
                     <field name="date_to" widget="daterange" options="{'related_start_date': 'date_from'}" />
-                    <field name="state" widget="badge" />
+                    <field name="state" widget="badge"
+                           decoration-muted="state == 'draft'"
+                           decoration-warning="state == 'pending'"
+                           decoration-info="state == 'generated'"
+                           decoration-success="state == 'validated'" />
                 </tree>
             </field>
         </record>

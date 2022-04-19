@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 class RmScheduleDay(models.Model):
     _name = "rm.schedule.day"
     _description = "A schedule day"
+    _inherit = ["meal.mixin"]
 
 
     schedule_id = fields.Many2one(comodel_name="rm.schedule", required=True, ondelete='cascade')

@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 class RmScheduleTemplateDay(models.Model):
     _name = "rm.schedule.template.day"
     _description = "A template day"
+    _inherit = ["meal.mixin"]
 
     template_id = fields.Many2one(comodel_name="rm.schedule.template")
     schedule_id = fields.Many2one(comodel_name="rm.schedule")
