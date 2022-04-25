@@ -25,6 +25,7 @@
         'views/res_company.xml',
         'views/product_category.xml',
         'views/product_template.xml',
+        'views/product_product.xml',
         'views/product_supplierinfo.xml',
 
         'views/rm_recipe.xml',

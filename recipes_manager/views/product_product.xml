@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="product_normal_form_view_inherit_purchase" model="ir.ui.view">
+            <field name="name">product_normal_form_view_inherit_purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="purchase.product_normal_form_view_inherit_purchase" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_recipes" type="object" icon="fa-cutlery" class="oe_stat_button">
+                        <field string="Recipes" name="recipe_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" default_order="sequence asc">
                     <field name="sequence" widget="handle"/>
-                    <field name="note" />
+                    <field name="name" />
                     <field name="breakfast_choice" />
                     <field name="lunch_choice" />
                     <field name="dinner_choice" />

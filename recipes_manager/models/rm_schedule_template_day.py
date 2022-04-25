@@ -10,7 +10,7 @@ class RmScheduleTemplateDay(models.Model):
     template_id = fields.Many2one(comodel_name="rm.schedule.template")
     schedule_id = fields.Many2one(comodel_name="rm.schedule")
     sequence = fields.Integer(default=10)
-    note = fields.Char()
+    name = fields.Char()
 
     def _get_selection_choices(self):
         return [

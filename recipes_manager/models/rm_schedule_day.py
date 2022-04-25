@@ -10,7 +10,8 @@ class RmScheduleDay(models.Model):
 
     schedule_id = fields.Many2one(comodel_name="rm.schedule", required=True, ondelete='cascade')
     sequence = fields.Integer()
-    note = fields.Char()
+    name = fields.Char()
+    date = fields.Date()
 
     breakfast_recipe = fields.Many2one(comodel_name="rm.recipe", string="Breakfast")
     lunch_recipe = fields.Many2one(comodel_name="rm.recipe", string="Lunch")

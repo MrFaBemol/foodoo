@@ -82,14 +82,15 @@ class Recipe(models.Model):
 
     def _compute_used_schedule_ids(self):
         for recipe in self:
-            recipe.used_schedule_ids = self.env['rm.schedule.day'].search([
+            days = self.env['rm.schedule.day'].search([
                 ('schedule_id.state', 'in', ['validated', 'done']),
                 '|', '|',
                     ('breakfast_recipe', '=', recipe.id),
                     ('lunch_recipe', '=', recipe.id),
                     ('dinner_recipe', '=', recipe.id)
-            ]).schedule_id
-            recipe.last_used = recipe.used_schedule_ids.sorted(key='date_to', reverse=True)[:1].date_to
+            ])
+            recipe.used_schedule_ids = days.schedule_id
+            recipe.last_used = days.sorted(key='date', reverse=True)[:1].date
 
     @api.depends('last_used', 'user_rating', 'difficulty')
     def _compute_weight_rating(self):

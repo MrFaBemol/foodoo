@@ -17,6 +17,8 @@
                         <button name="action_generate_purchase_order" string="Generate purchase order" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'validated'), ('purchase_id', '!=', False)]}"/>
                         <button name="generate_ingredients_list" string="Refresh ingredients list" type="object" class="oe_button" attrs="{'invisible': [('state', '!=', 'validated')]}"/>
 
+                        <button name="action_reset_to_draft" string="Reset to draft" type="object" class="oe_button" attrs="{'invisible': ['!', ('state', 'in', ['pending', 'generated'])]}"/>
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <div class="alert alert-warning" role="alert" attrs="{'invisible': [('error_message', '=', '')]}" >

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from collections import defaultdict
 
@@ -121,7 +123,7 @@ class RmSchedule(models.Model):
             best_weight = 100
 
             # Do all the possibilities:
-            while offset + longest_step < sequence_length:
+            while not offset or offset + longest_step < sequence_length:
                 res, res_weight = self.cut_meal_sequence(sequence, longest_step, offset)
                 if res_weight < best_weight:
                     best_sequence = res
@@ -142,13 +144,16 @@ class RmSchedule(models.Model):
             schedule.clean_days()
             vals_list = []
             template = schedule.template_id
+            day_date = schedule.date_from
             for day in schedule.template_day_ids:
                 vals = {
                     'schedule_id': schedule.id,
                     'sequence': day.sequence,
-                    'note': day.note,
+                    'name': day.name,
+                    'date': day_date,
                     'day_template_id': day.id,
                 }
+                day_date += relativedelta(days=1)
                 # Fill with the default values of the template
                 if template:
                     for meal in MEAL_TYPES:
@@ -255,10 +260,6 @@ class RmSchedule(models.Model):
                     'name': description,
                 })
 
-        # print("=====================================================")
-        # print(lines_vals)
-        # print("=====================================================")
-        # raise UserError("stop")
         self.env['purchase.order.line'].create(lines_vals)
 
 
@@ -270,7 +271,10 @@ class RmSchedule(models.Model):
         used_recipe_ids._compute_used_schedule_ids()
 
 
-
+    def action_reset_to_draft(self):
+        self.ensure_one()
+        self.clean_days()
+        self.state = 'draft'
 
     def action_confirm(self):
         self.ensure_one()
@@ -289,7 +293,7 @@ class RmSchedule(models.Model):
             self.state = 'generated'
 
         try_amount = 1
-        while try_amount <= 3:
+        while try_amount <= 1:
             try:
                 self.generate_schedule()
                 break
